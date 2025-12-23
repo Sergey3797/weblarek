@@ -98,3 +98,133 @@ Presenter - презентер содержит основную логику п
 `emit<T extends object>(event: string, data?: T): void` - инициализация события. При вызове события в метод передается название события и объект с данными, который будет использован как аргумент для вызова обработчика.  
 `trigger<T extends object>(event: string, context?: Partial<T>): (data: T) => void` - возвращает функцию, при вызове которой инициализируется требуемое в параметрах событие с передачей в него данных из второго параметра.
 
+## Данные 
+
+### Интерфейс товара
+
+Интерфейс описывающий продукт
+
+```typescript
+interface IProduct {
+  id: string;// идентефикатор товара 
+  description: string;// описание товара 
+  image: string;// картинка товара 
+  title: string;// заголовок товара 
+  category: string;// категория товара 
+  price: number | null;// цена товара 
+}
+```
+
+### Интерфейс покупателя 
+
+Интерфейс описывающий покупателя 
+
+```typescript
+interface IBuyer {
+  payment: TPayment;// способ оплаты 
+  email: string; // электронная почта 
+  phone: string; // телефон
+  address: string; // адрес
+}
+```
+
+### Интерфейс API
+
+```typescript
+type TApiGetProductsResponse = { // получаемые данные о списке товаров
+  total: number; // количество товаров
+  items: IProduct[]; // массив товаров
+}
+
+type TApiPostOrderResponse = TApiPostOrderResponseOk | TApiPostOrderResponseError; // получаемые данные о результате создания заказа
+
+type TApiPostOrderResponseOk = { //получаемые данные о созданом заказе в случае успеха
+  id: string; // идетификатор заказа
+  total: number; // общая сумма заказа
+}
+
+type TApiPostOrderResponseError = { //получаемые данные о созданом заказе в случае ошибки 
+  error: string; // текст ошибки
+}
+
+type TApiPostOrderRequest = { // отправляемые данные о создаваемом заказе
+  payment: TPayment; // способ оплаты
+  email: string; // почта 
+  phone: string; // телефон
+  address: string; // адрес
+  total: number; // общая сумма заказа
+  items: string[]; // массив идетификаторов товаров
+}
+```
+
+## Модели данных
+
+### Класс покупателя
+
+```typescript
+//класс покупателя отвечающий за хранение всех данных покупателя, а так же их получение и изменение 
+class Buyer {
+  private payment: TPayment; //вид оплаты 
+  private address: string; // адрес
+  private phone: string; // телефон
+  private email: string; // почта 
+
+  constructor(payment: TPayment, address: string, phone:string, email: string) {}
+  setPayment(payment: TPayment): void {} // сохранение данных вида оплаты  
+  getPayment(): TPayment {} // получение данных вида опаты 
+  setAddress(address: string): void {} //сохранение данных адресса 
+  getAddress(): string {} // получение данных адресса
+  setPhone(phone: string): void {} // сохранение телефона
+  getPhone(): string {} // получение телефона
+  setEmail(email: string): void {} // сохранение почты 
+  getEmail(): string {} // получение почты 
+  getAllData(): IBuyer {} // получение всех данных покупателя
+  clear(): void {} // очистка данных покупателя
+  validate(): TBuyerValidateErrors {} // валидация данных
+}
+```
+
+### Класс каталога
+
+```typescript
+// класс каталога товаров отвечающий за хранение всех товаров каталога, хранение выбранного товара, а так же их получение и изменение  
+class Catalog {
+  private products: IProduct[]; // массив всех товаров в каталоге 
+  private selectedProduct: IProduct | null; //  товар выбранный для подробного отображения
+  constructor() {}
+  getAllProducts(): IProduct[] {} // получение массива товаров  
+  setAllProducts(products: IProduct[]): void {} // сохранение массива товаров 
+  getProductById(id: string): IProduct | null {} // получение товара по его id
+  setSelectedProduct(product: IProduct): void {} // сохранение товара для подробного отображения
+  getSelectedProduct(): IProduct | null {} // получение товара для подробного отображения
+}
+```
+
+### Класс корзины
+
+```typescript
+// класс отвечающий за хранение списка товаров в корзине, его получение и изменение 
+class Cart {
+  private products: IProduct[]; // массив товаров выбранных покупателем для покупки 
+  constructor() {}
+  getProducts(): IProduct[] {} // получение массива товаров, которые находятся в корзине
+  addProduct(product: IProduct): void {} // добавление товара в корзину 
+  removeProduct(product: IProduct): void {} // удаление товара из корзины 
+  clear(): void {} // удаление всех товаров из корзины
+  getTotalPrice(): number {} // получение стоимости всех товаров в корзине
+  getProductsAmount(): number {} //получение количества товаров в корзине
+  checkById(id: string): boolean {} // проверка наличия товара в корзине по его id 
+}
+```
+
+## Слой коммуникации 
+
+``` typescript
+// класс отвечающий за коммуникацию с api weblarek
+export class LarekApi {
+  private api: Api;
+  constructor(api: Api) {}
+  getProductList():Promise<IProduct[]> {} // получение массива всех товаров 
+  postOrder(reqData:TApiPostOrderRequest): Promise<TApiPostOrderResponse> {} // отправка данных о заказе
+}
+```
