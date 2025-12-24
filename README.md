@@ -169,7 +169,7 @@ class Buyer {
   private phone: string; // телефон
   private email: string; // почта 
 
-  constructor(payment: TPayment, address: string, phone:string, email: string) {}
+  constructor() {}
   setPayment(payment: TPayment): void {} // сохранение данных вида оплаты  
   getPayment(): TPayment {} // получение данных вида опаты 
   setAddress(address: string): void {} //сохранение данных адресса 

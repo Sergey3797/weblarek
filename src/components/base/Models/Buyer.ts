@@ -2,17 +2,12 @@ import { IBuyer, TBuyerValidateErrors, TPayment } from "../../../types";
 
 //класс покупателя отвечающий за хранение всех данных покупателя, а так же их получение и изменение 
 export class Buyer {
-  private payment: TPayment; //вид оплаты 
-  private address: string; // адрес
-  private phone: string; // телефон
-  private email: string; // почта 
+  private payment: TPayment = ''; //вид оплаты 
+  private address: string = ''; // адрес
+  private phone: string = ''; // телефон
+  private email: string = ''; // почта 
 
-  constructor(payment?: TPayment, address?: string, phone?:string, email?: string) {
-    this.payment = payment ?? '';
-    this.address = address ?? '';
-    this.phone = phone ?? '';
-    this.email = email ?? '';
-  }
+  constructor() {}
   setPayment(payment: TPayment): void { // сохранение данных вида оплаты 
     this.payment = payment;
   }

@@ -76,5 +76,6 @@ larek.getProductList().then((items) => {
   console.log('=== тестирование на основе на сонове данных сервера ===');
   products = items;
   testModels(products);
-});
+}).catch();
+
 

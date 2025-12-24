@@ -3,11 +3,9 @@ import { IProduct } from "../../../types";
 // класс отвечающий за хранение списка товаров в корзине, его получение и изменение 
 
 export class Cart {
-  private products: IProduct[]; // массив товаров выбранных покупателем для покупки 
+  private products: IProduct[] = []; // массив товаров выбранных покупателем для покупки 
   
-  constructor(products?: IProduct[]) {
-    this.products = products ?? [];
-  }
+  constructor() {}
   getProducts(): IProduct[] { // получение массива товаров, которые находятся в корзине
     return this.products;
   }
