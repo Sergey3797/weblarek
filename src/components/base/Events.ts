@@ -1,6 +1,11 @@
 // Хорошая практика даже простые типы выносить в алиасы
 // Зато когда захотите поменять это достаточно сделать в одном месте
-type EventName = string | RegExp;
+export enum EventEnum {
+    OpenBasket = 'basket:open',
+} 
+
+type EventName = string | RegExp | EventEnum;
+
 type Subscriber = Function;
 type EmitterEvent = {
     eventName: string,
