@@ -2,6 +2,7 @@
 // Зато когда захотите поменять это достаточно сделать в одном месте
 export enum EventEnum {
     OpenBasket = 'basket:open',
+    CloseModal = 'modal:close',
 } 
 
 type EventName = string | RegExp | EventEnum;

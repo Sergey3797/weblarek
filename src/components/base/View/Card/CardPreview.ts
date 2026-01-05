@@ -18,8 +18,8 @@ export class CardPreview extends Card<TCardPreview> {
     this.descriptionElement = ensureElement<HTMLParagraphElement>('.card__text', this.container);
     this.purchaseButton = ensureElement<HTMLButtonElement>('.card__button', this.container);
 
-    if(actions?.handleButtonClick) {
-      this.purchaseButton.addEventListener('click', actions.handleButtonClick);
+    if(actions?.purchaseButtonClickHandler) {
+      this.purchaseButton.addEventListener('click', actions.purchaseButtonClickHandler);
     }
   }
 

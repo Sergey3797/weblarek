@@ -6,8 +6,10 @@ export type CategoryKey = keyof typeof categoryMap;
 
 export interface ICardActions {
   onClick?: () => void;
-  handleButtonClick?: () => void;
+  purchaseButtonClickHandler?: () => void;
+  deleteButtonClickHandler?: () => void;
 }
+
 
 interface ICard {
   title: string;
@@ -29,7 +31,11 @@ export class Card<T = {}> extends Component<ICard & T> {
     this.titleElement.textContent = value;
   }
   set price(value: number | null) {
-    this.priceElement.textContent = String(value);
+    if (value !== null) {
+      this.priceElement.textContent = String(value);
+    }else {
+      this.priceElement.textContent = 'Бесценно';
+    }
   }
 }
 
