@@ -14,6 +14,7 @@ import { CardCatalog } from './components/base/View/Card/CardCatalog';
 import { Modal } from './components/base/View/Modal';
 import { CardPreview } from './components/base/View/Card/CardPreview';
 import { CardBasket } from './components/base/View/Card/CardBasket';
+import { Basket } from './components/base/View/Basket';
 
 const events = new EventEmitter();
 const catalogContainer = ensureElement<HTMLElement>('.gallery');
@@ -26,6 +27,8 @@ const cardPreviewTemplate = ensureElement<HTMLTemplateElement>('#card-preview');
 const cardBasketTemplate = ensureElement<HTMLTemplateElement>('#card-basket');
 const modalContainer = ensureElement<HTMLDivElement>('#modal-container');
 const modal = new Modal(events, modalContainer);
+const basketTemplate = ensureElement<HTMLTemplateElement>('#basket');
+const basket = new Basket(cloneTemplate(basketTemplate));
 
 larekApi.getProductList().then((data) =>{
   productModel.setAllProducts(data);
@@ -41,7 +44,7 @@ larekApi.getProductList().then((data) =>{
   const cardPreview = new CardPreview(cloneTemplate(cardPreviewTemplate));
   const testCardPreview = cardPreview.render(products[1]);
 
-  const cardBasketArr = [];
+  const cardBasketArr: HTMLElement[] = [];
   for (let i = 0; i < 5; i++) {
     const cardBasket = new CardBasket(cloneTemplate(cardBasketTemplate));
     cardBasketArr.push(cardBasket.render({
@@ -49,7 +52,12 @@ larekApi.getProductList().then((data) =>{
       ...products[i],
     }));
   }
-  modal.render({content: cardBasketArr});
+
+  const basketElement = basket.render({
+    totalPrice: 12345,
+    items: cardBasketArr, 
+  }) 
+  modal.render({content: basketElement});
   modal.open();
 }).catch();
 
