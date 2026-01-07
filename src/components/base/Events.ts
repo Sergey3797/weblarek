@@ -3,6 +3,19 @@
 export enum EventEnum {
     OpenBasket = 'basket:open',
     CloseModal = 'modal:close',
+    LarekApiGetProductList = 'larekApi:getProductList',
+    BuyerSetPayment = 'buyerModel:setPayment', 
+    BuyerSetAddress = 'buyerModel:setAddress',
+    BuyerSetPhone = 'buyerModel:setPhone',
+    BuyerSetEmail = 'buyerModel:setEmail',
+    BuyerClearData = 'buyerModel:clearData',
+    BuyerValidate = 'buyerModel:validate',
+    CartAddProduct = 'cartModel:add',
+    CartRemoveProduct = 'cartModel:remove',
+    CartClear = 'cartModel:clear',
+    CatalogSetAllProducts = 'catalogModel:setAll',
+    CatalogSetSelectedProduct = 'catalogModel:setSelected',
+    CardCatalogClick = 'cardCatalog:click',
 } 
 
 type EventName = string | RegExp | EventEnum;

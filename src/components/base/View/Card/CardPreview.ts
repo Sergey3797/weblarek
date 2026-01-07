@@ -38,4 +38,15 @@ export class CardPreview extends Card<TCardPreview> {
   set description(value: string) {
     this.descriptionElement.textContent = value;
   }
+
+  override set price(value: number | null) {
+    if (value) {
+      this.purchaseButton.disabled = false;
+      this.purchaseButton.textContent = 'Купить';
+    }else {
+      this.purchaseButton.disabled = true;
+      this.purchaseButton.textContent = 'Недоступно';
+    }
+    super.price = value;
+  }
 }

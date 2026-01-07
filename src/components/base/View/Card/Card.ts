@@ -10,7 +10,6 @@ export interface ICardActions {
   deleteButtonClickHandler?: () => void;
 }
 
-
 interface ICard {
   title: string;
   price: number | null;
