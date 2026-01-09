@@ -386,7 +386,6 @@ class CardPreview extends Card<TCardPreview> {
   protected categoryElement: HTMLElement;
   protected descriptionElement: HTMLParagraphElement;
   protected purchaseButton: HTMLButtonElement;
-  private isPriceless: boolean;
 
   constructor(container: HTMLElement, actions?: ICardActions) {}
 
@@ -547,14 +546,19 @@ enum EventEnum {
   CatalogSetAllProducts = 'catalogModel:setAll',
   CatalogSetSelectedProduct = 'catalogModel:setSelected',
   CardCatalogClick = 'cardCatalog:click',
+  CardPreviewButtonClick = 'cardPreview:buttonClick',
   CardPreviewPurchase = 'cardPreview:purchase',
   CardPreviewDelete = 'cardPreview:delete',
   CardBasketDelete = 'cardBasket:delete',
   BasketOrderButtonClick = 'basket:orderButtonClick',
   OrderFormValidated = 'orderForm:validated',
   OrderFormSubmit = 'orderForm:submit',
+  OrderFormChangePayment = 'orderForm:changePayment',
+  OrderFormChangeAddress = 'orderForm:changeAddress',
   ContactsFormValidated = 'contactsForm:validated',
   ContactsFormSubmit = 'contactsForm:submit',
+  ContactsFormChangeEmail = 'contactsForm:changeEmail',
+  ContactsFormChangePhone = 'contactsForm:changePhone',
   SuccessSubmit = 'success:submit',
 } 
 ```
