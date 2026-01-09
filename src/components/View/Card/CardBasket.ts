@@ -1,5 +1,5 @@
-import { ICardActions, TCardBasket } from "../../../../types";
-import { ensureElement } from "../../../../utils/utils";
+import { ICardActions, TCardBasket } from "../../../types";
+import { ensureElement } from "../../../utils/utils";
 import { Card } from "./Card";
 
 // класс карточки товаров в корзине

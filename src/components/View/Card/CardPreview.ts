@@ -1,6 +1,6 @@
-import { CategoryKey, ICardActions, TCardPreview } from "../../../../types";
-import { categoryMap, CDN_URL } from "../../../../utils/constants";
-import { ensureElement } from "../../../../utils/utils";
+import { CategoryKey, ICardActions, TCardPreview } from "../../../types";
+import { categoryMap, CDN_URL } from "../../../utils/constants";
+import { ensureElement } from "../../../utils/utils";
 import { Card } from "./Card";
 
 // класс карточки товара с подробностями 
@@ -9,7 +9,6 @@ export class CardPreview extends Card<TCardPreview> {
   protected categoryElement: HTMLElement;
   protected descriptionElement: HTMLParagraphElement;
   protected purchaseButton: HTMLButtonElement;
-  private isPriceless: boolean;
 
   constructor(container: HTMLElement, actions?: ICardActions) {
     super(container);
@@ -17,7 +16,6 @@ export class CardPreview extends Card<TCardPreview> {
     this.imageElement = ensureElement<HTMLImageElement>('.card__image', this.container);
     this.descriptionElement = ensureElement<HTMLParagraphElement>('.card__text', this.container);
     this.purchaseButton = ensureElement<HTMLButtonElement>('.card__button', this.container);
-    this.isPriceless = false;
 
     if(actions?.purchaseButtonClickHandler) {
       this.purchaseButton.addEventListener('click', actions.purchaseButtonClickHandler);
@@ -41,7 +39,7 @@ export class CardPreview extends Card<TCardPreview> {
   }
 
   set isInCart(value: boolean) {
-    if (!this.isPriceless) {
+    if (!this.purchaseButton.disabled) {
       if (value) {
         this.purchaseButton.textContent = 'Удалить из корзины';
       }else {
@@ -52,10 +50,8 @@ export class CardPreview extends Card<TCardPreview> {
 
   override set price(value: number | null) {
     if (value) {
-      this.isPriceless = false;
       this.purchaseButton.disabled = false;
     }else {
-      this.isPriceless = true;
       this.purchaseButton.textContent = 'Недоступно';
       this.purchaseButton.disabled = true;
     }

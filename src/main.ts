@@ -1,23 +1,23 @@
 import './scss/styles.scss';
-import { Catalog } from './components/base/Model/Catalog';
-import { Cart } from './components/base/Model/Cart';
-import { Buyer } from './components/base/Model/Buyer';
+import { Catalog } from './components/Model/Catalog';
+import { Cart } from './components/Model/Cart';
+import { Buyer } from './components/Model/Buyer';
 import { LarekApi } from './components/network/network';
 import { API_URL } from './utils/constants';
 import { Api } from './components/base/Api';
 import { IProduct, TBuyerValidateErrors, TPayment } from './types';
-import { Gallery } from './components/base/View/Gallery';
+import { Gallery } from './components/View/Gallery';
 import { EventEmitter, EventEnum } from './components/base/Events';
 import { cloneTemplate, ensureElement } from './utils/utils';
-import { CardCatalog } from './components/base/View/Card/CardCatalog';
-import { Modal } from './components/base/View/Modal';
-import { CardPreview } from './components/base/View/Card/CardPreview';
-import { CardBasket } from './components/base/View/Card/CardBasket';
-import { Basket } from './components/base/View/Basket';
-import { OrderForm } from './components/base/View/Form/OrderForm';
-import { ContactsForm } from './components/base/View/Form/ContactsForm';
-import { Success } from './components/base/View/Success';
-import { Header } from './components/base/View/Header';
+import { CardCatalog } from './components/View/Card/CardCatalog';
+import { Modal } from './components/View/Modal';
+import { CardPreview } from './components/View/Card/CardPreview';
+import { CardBasket } from './components/View/Card/CardBasket';
+import { Basket } from './components/View/Basket';
+import { OrderForm } from './components/View/Form/OrderForm';
+import { ContactsForm } from './components/View/Form/ContactsForm';
+import { Success } from './components/View/Success';
+import { Header } from './components/View/Header';
 
 const api = new Api(API_URL);
 const larekApi = new LarekApi(api);
@@ -53,14 +53,13 @@ const cardPreview = new CardPreview(cloneTemplate(cardPreviewTemplate), {
         events.emit(EventEnum.CardPreviewPurchase, {product: selectedProduct});
       }
     }
-    modal.close();
   }});
 const orderForm  = new OrderForm(cloneTemplate(orderFormTemplate), {
   paymentButtonClickHandler: (payment) => {
-    buyerModel.setPayment(payment);
+    events.emit(EventEnum.OrderFormChangePayment, {payment});
   },
   addressInputChangeHandler: (address) => {
-    buyerModel.setAddress(address);
+    events.emit(EventEnum.OrderFormChangeAddress, {address});
   },
   submitButtonClickHandler: () => {
     events.emit(EventEnum.OrderFormSubmit);
@@ -68,10 +67,10 @@ const orderForm  = new OrderForm(cloneTemplate(orderFormTemplate), {
 });
 const contactsForm = new ContactsForm(cloneTemplate(contactsFormTemplate), {
   emailInputChangeHandler: (email) => {
-    buyerModel.setEmail(email);
+    events.emit(EventEnum.ContactsFormChangeEmail, {email});
   }, 
   phoneInputChangeHandler: (phone) => {
-    buyerModel.setPhone(phone);
+    events.emit(EventEnum.ContactsFormChangePhone, {phone});
   },
   submitButtonClickHandler: () => {
     events.emit(EventEnum.ContactsFormSubmit);
@@ -121,6 +120,7 @@ events.on<{product: IProduct}>(EventEnum.CatalogSetSelectedProduct, ({product}) 
 
 // подписываемся на событие клика по кнопке купить в подробной карточке товара
 events.on<{product: IProduct}>(EventEnum.CardPreviewPurchase, ({product}) =>{
+  modal.close();
   cartModel.addProduct(product);
 });
 
@@ -131,6 +131,7 @@ events.on<{product: IProduct}>(EventEnum.CartAddProduct, () =>{
 
 // подписываемся на событие клика по кнопке удалить в подробной карточке товара
 events.on<{product: IProduct}>(EventEnum.CardPreviewDelete, ({product}) =>{
+  modal.close();
   cartModel.removeProduct(product);
 });
 
@@ -259,14 +260,14 @@ events.on(EventEnum.ContactsFormSubmit, () => {
     total: cartModel.getTotalPrice(),
     items: ids,
   }).then((res) => {
+    buyerModel.clear();
+    cartModel.clear();
+    modal.close();
     if('total' in res) {
       modal.render({content: success.render({orderPrice: res.total})});
       modal.open();
     }
   }).catch();
-  buyerModel.clear();
-  cartModel.clear();
-  modal.close();
 });
 
 // подписываемся на событие подтверждения успешного заказа
@@ -279,3 +280,22 @@ events.on(EventEnum.CartClear, () => {
   header.render({counter: cartModel.getProductsAmount()});
 });
 
+// подписываемся на событие изменения способа оплаты в форме заказа
+events.on<{payment: TPayment}>(EventEnum.OrderFormChangePayment, ({payment}) => {
+  buyerModel.setPayment(payment);
+});
+
+// подписываемся на событие изменения адреса в форме заказа
+events.on<{address: string}>(EventEnum.OrderFormChangeAddress, ({address}) => {
+  buyerModel.setAddress(address);
+});
+
+// подписываемся на событие изменения почты в форме контакта
+events.on<{email: string}>(EventEnum.ContactsFormChangeEmail, ({email}) => {
+  buyerModel.setEmail(email);
+});
+
+// подписываемся на событие изменения телефона в форме контакта
+events.on<{phone: string}>(EventEnum.ContactsFormChangePhone, ({phone}) => {
+  buyerModel.setPhone(phone);
+});

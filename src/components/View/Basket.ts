@@ -1,7 +1,7 @@
-import { IBasket } from "../../../types";
-import { ensureElement } from "../../../utils/utils";
-import { Component } from "../Component";
-import { EventEnum, IEvents } from "../Events";
+import { IBasket } from "../../types";
+import { ensureElement } from "../../utils/utils";
+import { Component } from "../base/Component";
+import { EventEnum, IEvents } from "../base/Events";
 
 // класс представления корзины
 export class Basket extends Component<IBasket> {

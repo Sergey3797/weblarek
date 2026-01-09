@@ -1,5 +1,5 @@
-import { IContactsForm, IFormActions } from "../../../../types";
-import { ensureElement } from "../../../../utils/utils";
+import { IContactsForm, IFormActions } from "../../../types";
+import { ensureElement } from "../../../utils/utils";
 import { Form } from "./Form";
 
 // класс формы контакта 

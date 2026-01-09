@@ -1,5 +1,5 @@
-import { IProduct } from "../../../types";
-import { EventEnum, IEvents } from "../Events";
+import { IProduct } from "../../types";
+import { EventEnum, IEvents } from "../base/Events";
 
 // класс каталога товаров отвечающий за хранение всех товаров каталога, хранение выбранного товара, а так же их получение и изменение  
 export class Catalog {

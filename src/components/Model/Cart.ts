@@ -1,5 +1,5 @@
-import { IProduct } from "../../../types";
-import { EventEnum, IEvents } from "../Events";
+import { IProduct } from "../../types";
+import { EventEnum, IEvents } from "../base/Events";
 
 // класс отвечающий за хранение списка товаров в корзине, его получение и изменение 
 

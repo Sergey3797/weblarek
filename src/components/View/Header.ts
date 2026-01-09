@@ -1,7 +1,7 @@
-import { IHeader } from "../../../types";
-import { ensureElement } from "../../../utils/utils";
-import { Component } from "../Component";
-import { EventEnum, IEvents } from "../Events";
+import { IHeader } from "../../types";
+import { ensureElement } from "../../utils/utils";
+import { Component } from "../base/Component";
+import { EventEnum, IEvents } from "../base/Events";
 
 // класс шапки сайта 
 export class Header extends Component<IHeader> {

@@ -1,6 +1,6 @@
-import { ICard} from "../../../../types";
-import { ensureElement } from "../../../../utils/utils";
-import { Component } from "../../Component";
+import { ICard} from "../../../types";
+import { ensureElement } from "../../../utils/utils";
+import { Component } from "../../base/Component";
 
 // родительский класс для классов карточек товаров
 export class Card<T = {}> extends Component<ICard & T> { 

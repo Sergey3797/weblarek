@@ -1,5 +1,5 @@
-import { IBuyer, TBuyerValidateErrors, TPayment } from "../../../types";
-import { EventEnum, IEvents } from "../Events";
+import { IBuyer, TBuyerValidateErrors, TPayment } from "../../types";
+import { EventEnum, IEvents } from "../base/Events";
 
 //класс покупателя отвечающий за хранение всех данных покупателя, а так же их получение и изменение 
 export class Buyer {

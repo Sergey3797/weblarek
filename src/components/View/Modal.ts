@@ -1,7 +1,7 @@
-import { IModal } from "../../../types";
-import { ensureElement } from "../../../utils/utils";
-import { Component } from "../Component";
-import { EventEnum, IEvents } from "../Events";
+import { IModal } from "../../types";
+import { ensureElement } from "../../utils/utils";
+import { Component } from "../base/Component";
+import { EventEnum, IEvents } from "../base/Events";
 
 // класс модального окна 
 export class Modal extends Component<IModal> {

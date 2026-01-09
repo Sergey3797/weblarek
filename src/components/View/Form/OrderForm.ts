@@ -1,5 +1,5 @@
-import { IFormActions, IOrderForm, TPayment } from "../../../../types";
-import { ensureAllElements, ensureElement } from "../../../../utils/utils";
+import { IFormActions, IOrderForm, TPayment } from "../../../types";
+import { ensureAllElements, ensureElement } from "../../../utils/utils";
 import { Form } from "./Form";
 
 // класс формы заказа
@@ -30,11 +30,7 @@ export class OrderForm extends Form<IOrderForm> {
   
   set payment(value: 'card' | 'cash' | '') {
     this.paymentButtons.forEach((button) => {
-      if (button.name === value) {
-        button.classList.add('button_alt-active');
-      }else {
-        button.classList.remove('button_alt-active')
-      }
+      button.classList.toggle('button_alt-active', button.name === value);
     })
   }
 
