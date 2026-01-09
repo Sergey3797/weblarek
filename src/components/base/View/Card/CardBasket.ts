@@ -1,10 +1,8 @@
-import { ensureAllElements, ensureElement } from "../../../../utils/utils";
-import { Card, ICardActions } from "./Card";
+import { ICardActions, TCardBasket } from "../../../../types";
+import { ensureElement } from "../../../../utils/utils";
+import { Card } from "./Card";
 
-type TCardBasket = {
-  index: number;
-}
-
+// класс карточки товаров в корзине
 export class CardBasket extends Card<TCardBasket> {
   
   protected deleteButton: HTMLButtonElement;
@@ -15,7 +13,7 @@ export class CardBasket extends Card<TCardBasket> {
     super(container);
     this.deleteButton = ensureElement<HTMLButtonElement>('.card__button', this.container);
     this.indexElement = ensureElement<HTMLSpanElement>('.basket__item-index', this.container);
-    // TODO: придумать более подробные имена экшена 
+    
     if(actions?.deleteButtonClickHandler) {
       this.deleteButton.addEventListener('click', actions.deleteButtonClickHandler);
     }

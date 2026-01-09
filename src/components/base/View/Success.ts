@@ -1,14 +1,8 @@
+import { ISuccess, ISuccessActions } from "../../../types";
 import { ensureElement } from "../../../utils/utils";
 import { Component } from "../Component";
 
-interface ISuccess {
-  orderPrice: number;
-}
-
-interface ISuccessActions {
-  successButtonClickHandler?: () => void;
-}
-
+// класс сообщения об успешном заказе
 export class Success extends Component<ISuccess> {
   protected descriptionElement: HTMLParagraphElement;
   protected successButtonElement: HTMLButtonElement;

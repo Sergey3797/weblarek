@@ -157,6 +157,105 @@ type TApiPostOrderRequest = { // отправляемые данные о соз
 }
 ```
 
+### Остальные типы
+
+```typescript
+export interface IProduct {
+  id: string;
+  description: string;
+  image: string;
+  title: string;
+  category: string;
+  price: number | null;
+} 
+
+export type TPayment = 'card' | 'cash' | '';
+
+export interface IBuyer {
+  payment: TPayment;
+  email: string;
+  phone: string;
+  address: string;
+} 
+
+export type TBuyerValidateErrors = {
+  payment?: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+}
+
+export type CategoryKey = keyof typeof categoryMap;
+
+export interface ICardActions {
+  onClick?: () => void;
+  purchaseButtonClickHandler?: () => void;
+  deleteButtonClickHandler?: () => void;
+}
+
+export interface ICard {
+  title: string;
+  price: number | null;
+}
+
+export type TCardBasket = {
+  index: number;
+}
+
+export type TCardCatalog = Pick<IProduct, 'image' | 'category'>
+
+export type TCardPreview = Pick<IProduct, 'image' | 'category' | 'description'> & {isInCart: boolean}
+
+export interface IFormActions {
+  submitButtonClickHandler?: () => void;
+  paymentButtonClickHandler?: (payment: TPayment) => void;
+  addressInputChangeHandler?: (address: string) => void;
+  emailInputChangeHandler?: (email: string) => void;
+  phoneInputChangeHandler?: (phone: string) => void;
+}
+
+export interface IForm<T> {
+  errors: {[key in keyof T]?: string};
+  isValid: boolean;
+}
+
+export interface IContactsForm {
+  email: string;
+  phone: string;
+}
+
+export interface IOrderForm {
+  payment: 'card' | 'cash' | '';
+  address: string;
+}
+
+export interface IBasket {
+  items: HTMLElement[];
+  totalPrice: number;
+  title?: string;
+}
+
+export interface IGallery {
+  catalog: HTMLElement[];
+}
+
+export interface IHeader {
+  counter: number;
+}
+
+export interface IModal {
+  content: HTMLElement | HTMLElement[]
+}
+
+export interface ISuccess {
+  orderPrice: number;
+}
+
+export interface ISuccessActions {
+  successButtonClickHandler?: () => void;
+}
+```
+
 ## Модели данных
 
 ### Класс покупателя
@@ -169,7 +268,7 @@ class Buyer {
   private phone: string; // телефон
   private email: string; // почта 
 
-  constructor() {}
+  constructor(protected events: IEvents) {}
   setPayment(payment: TPayment): void {} // сохранение данных вида оплаты  
   getPayment(): TPayment {} // получение данных вида опаты 
   setAddress(address: string): void {} //сохранение данных адресса 
@@ -191,7 +290,7 @@ class Buyer {
 class Catalog {
   private products: IProduct[]; // массив всех товаров в каталоге 
   private selectedProduct: IProduct | null; //  товар выбранный для подробного отображения
-  constructor() {}
+  constructor(protected events: IEvents) {}
   getAllProducts(): IProduct[] {} // получение массива товаров  
   setAllProducts(products: IProduct[]): void {} // сохранение массива товаров 
   getProductById(id: string): IProduct | null {} // получение товара по его id
@@ -206,7 +305,7 @@ class Catalog {
 // класс отвечающий за хранение списка товаров в корзине, его получение и изменение 
 class Cart {
   private products: IProduct[]; // массив товаров выбранных покупателем для покупки 
-  constructor() {}
+  constructor(protected events: IEvents) {}
   getProducts(): IProduct[] {} // получение массива товаров, которые находятся в корзине
   addProduct(product: IProduct): void {} // добавление товара в корзину 
   removeProduct(product: IProduct): void {} // удаление товара из корзины 
@@ -221,10 +320,247 @@ class Cart {
 
 ``` typescript
 // класс отвечающий за коммуникацию с api weblarek
-export class LarekApi {
+class LarekApi {
   private api: Api;
   constructor(api: Api) {}
   getProductList():Promise<IProduct[]> {} // получение массива всех товаров 
   postOrder(reqData:TApiPostOrderRequest): Promise<TApiPostOrderResponse> {} // отправка данных о заказе
 }
 ```
+
+## Представления
+
+### Общий класс карточки товара
+
+```typescript
+// родительский класс для классов карточек товаров
+class Card<T = {}> extends Component<ICard & T> { 
+  protected titleElement: HTMLSpanElement | HTMLHeadingElement;
+  protected priceElement: HTMLSpanElement;
+
+  constructor(container: HTMLElement) {}
+
+  set title(value: string) {}
+  set price(value: number | null) {}
+}
+```
+
+### Класс карточки товара в корзине
+
+```typescript
+// класс карточки товаров в корзине
+class CardBasket extends Card<TCardBasket> {
+  
+  protected deleteButton: HTMLButtonElement;
+
+  protected indexElement: HTMLSpanElement;
+
+  constructor(container: HTMLElement, actions?: ICardActions) {}
+
+  set index(value: number) {}
+}
+```
+
+### Класс карточки товара в каталоге
+
+```typescript
+// класс карточки товара в каталоге
+class CardCatalog extends Card<TCardCatalog>{ 
+  protected imageElement: HTMLImageElement;
+  protected categoryElement: HTMLElement;
+
+  constructor(container:HTMLElement, actions?: ICardActions) {}
+
+  set category(value: string) {}
+  
+  set image(value: string) {}
+}
+```
+
+### Класс карточки товара с подробностями
+
+```typescript
+// класс карточки товара с подробностями 
+class CardPreview extends Card<TCardPreview> {
+  protected imageElement: HTMLImageElement;
+  protected categoryElement: HTMLElement;
+  protected descriptionElement: HTMLParagraphElement;
+  protected purchaseButton: HTMLButtonElement;
+  private isPriceless: boolean;
+
+  constructor(container: HTMLElement, actions?: ICardActions) {}
+
+  set category(value: string) {}
+    
+  set image(value: string) {} 
+  
+  set description(value: string) {}
+
+  set isInCart(value: boolean) {}
+
+  override set price(value: number | null) {}
+}
+```
+
+### Общий класс формы 
+
+```typescript
+// родительский класс для класса формы
+class Form<T extends object> extends Component<IForm<T> & T> {
+  protected errorsElement: HTMLSpanElement;
+  protected submitButtonElement: HTMLButtonElement;
+
+  constructor(container: HTMLElement, actions?: IFormActions) {}
+
+  set errors(value: {[key in keyof T]: string}) {}
+
+  set isValid(value: boolean) {} 
+}  
+```
+
+### Класс формы контакта 
+
+```typescript
+// класс формы контакта 
+class ContactsForm extends Form<IContactsForm> {
+  protected emailInputElement: HTMLInputElement;
+  protected phoneInputElement: HTMLInputElement;
+
+  constructor (container: HTMLElement, actions?: IFormActions ) {}
+
+  set email(value: string) {}
+
+  set phone(value: string) {}
+}
+```
+
+### Класс формы заказа
+
+```typescript
+// класс формы заказа
+class OrderForm extends Form<IOrderForm> {
+  protected paymentButtons: HTMLButtonElement[];
+  protected addressInputElement: HTMLInputElement;
+
+  constructor(container: HTMLElement, actions?: IFormActions) {}
+  
+  set payment(value: 'card' | 'cash' | '') {}
+
+  set address(value: string) {}
+}
+```
+
+### Класс представления корзины
+
+```typescript
+// класс предстваления корзины
+class Basket extends Component<IBasket> {
+  protected titleElement: HTMLHeadingElement;
+  protected totalPriceElement: HTMLSpanElement;
+  protected listElement: HTMLUListElement;
+  protected orderButtonElement: HTMLButtonElement;
+
+  constructor(protected events: IEvents, container: HTMLElement) {}
+
+  set title(value: string) {}
+
+  set totalPrice(value: number) {}
+
+  set items(value: HTMLElement[]) {}
+}
+```
+
+### Класс представления каталога
+
+```typescript
+// класс представления каталога
+class Gallery extends Component<IGallery> {
+  protected catalogElement: HTMLElement;
+
+  constructor(protected events: IEvents, container: HTMLElement) {}
+  
+  set catalog(items:HTMLElement[]) {}
+}
+```
+
+### Класс шапки сайта
+
+```typescript
+// класс шапки сайта 
+class Header extends Component<IHeader> {
+  protected counterElement: HTMLElement;
+  protected basketButton: HTMLButtonElement;
+
+  constructor(protected events: IEvents, container: HTMLElement) {}
+
+  set counter(value: number) {}
+}
+```
+### Класс модального окна 
+
+```typescript
+// класс модального окна 
+class Modal extends Component<IModal> {
+  protected contentElement: HTMLDivElement;
+  protected closeButton: HTMLButtonElement;
+
+  constructor(protected events: IEvents, container: HTMLElement){}
+
+  open() {}
+
+  close() {}
+  
+  set content(value: HTMLElement | HTMLElement[] | null) {}
+}
+```
+
+### Класс сообщения об успешном заказе
+
+```typescript
+// класс сообщения об успешном заказе
+class Success extends Component<ISuccess> {
+  protected descriptionElement: HTMLParagraphElement;
+  protected successButtonElement: HTMLButtonElement;
+
+  constructor(container: HTMLElement, actions?: ISuccessActions) {}
+
+  set orderPrice(value: number) {}
+}
+```
+
+## События
+
+```typescript
+enum EventEnum {
+  OpenBasket = 'basket:open',
+  CloseModal = 'modal:close',
+  LarekApiGetProductList = 'larekApi:getProductList',
+  BuyerSetPayment = 'buyerModel:setPayment', 
+  BuyerSetAddress = 'buyerModel:setAddress',
+  BuyerSetPhone = 'buyerModel:setPhone',
+  BuyerSetEmail = 'buyerModel:setEmail',
+  BuyerClearData = 'buyerModel:clearData',
+  BuyerValidate = 'buyerModel:validate',
+  CartAddProduct = 'cartModel:add',
+  CartRemoveProduct = 'cartModel:remove',
+  CartClear = 'cartModel:clear',
+  CatalogSetAllProducts = 'catalogModel:setAll',
+  CatalogSetSelectedProduct = 'catalogModel:setSelected',
+  CardCatalogClick = 'cardCatalog:click',
+  CardPreviewPurchase = 'cardPreview:purchase',
+  CardPreviewDelete = 'cardPreview:delete',
+  CardBasketDelete = 'cardBasket:delete',
+  BasketOrderButtonClick = 'basket:orderButtonClick',
+  OrderFormValidated = 'orderForm:validated',
+  OrderFormSubmit = 'orderForm:submit',
+  ContactsFormValidated = 'contactsForm:validated',
+  ContactsFormSubmit = 'contactsForm:submit',
+  SuccessSubmit = 'success:submit',
+} 
+```
+
+## Презентер 
+
+Код презентера реализован в основном скрипте приложения (main.ts)
+
+

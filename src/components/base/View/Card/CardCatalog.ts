@@ -1,11 +1,10 @@
-import { IProduct } from "../../../../types";
+import { CategoryKey, ICardActions, TCardCatalog } from "../../../../types";
 import { categoryMap, CDN_URL } from "../../../../utils/constants";
 import { ensureElement } from "../../../../utils/utils";
-import { Card, CategoryKey, ICardActions } from "./Card";
+import { Card } from "./Card";
 
-export type TCardCatalog = Pick<IProduct, 'image' | 'category'>; 
-
-export class CardCatalog extends Card<TCardCatalog>{
+// класс карточки товара в каталоге
+export class CardCatalog extends Card<TCardCatalog>{ 
   protected imageElement: HTMLImageElement;
   protected categoryElement: HTMLElement;
 

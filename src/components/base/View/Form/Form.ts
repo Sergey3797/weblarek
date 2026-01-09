@@ -1,21 +1,8 @@
+import { IForm, IFormActions, TPayment } from "../../../../types";
 import { ensureElement } from "../../../../utils/utils";
 import { Component } from "../../Component";
 
-export interface IFormActions {
-  submitButtonClickHandler?: () => void;
-  paymentButtonClickHandler?: (paymentType: string) => void;
-  addressInputChangeHandler?: () => void;
-  emailInputChangeHandler?: () => void;
-  phoneInputChangeHandler?: () => void;
-}
-
-interface IForm<T> {
-  errors: {[key in keyof T]?: string};
-  //TODO 
-  // подумать когда будем реализовывать конкретные формы 
-  // data: T;
-}
-
+// родительский класс для класса формы
 export class Form<T extends object> extends Component<IForm<T> & T> {
   protected errorsElement: HTMLSpanElement;
   protected submitButtonElement: HTMLButtonElement;
@@ -35,4 +22,12 @@ export class Form<T extends object> extends Component<IForm<T> & T> {
   set errors(value: {[key in keyof T]: string}) {
     this.errorsElement.textContent = Object.values(value).join(', ');
   }
+
+  set isValid(value: boolean) {
+    if (value) {
+      this.submitButtonElement.disabled = false;
+    }else {
+      this.submitButtonElement.disabled = true;
+    }
+  } 
 }  

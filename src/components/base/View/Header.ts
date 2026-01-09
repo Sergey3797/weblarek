@@ -1,11 +1,9 @@
+import { IHeader } from "../../../types";
 import { ensureElement } from "../../../utils/utils";
 import { Component } from "../Component";
 import { EventEnum, IEvents } from "../Events";
 
-interface IHeader {
-  counter: number;
-}
-
+// класс шапки сайта 
 export class Header extends Component<IHeader> {
   protected counterElement: HTMLElement;
   protected basketButton: HTMLButtonElement;

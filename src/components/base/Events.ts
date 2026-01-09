@@ -16,6 +16,15 @@ export enum EventEnum {
     CatalogSetAllProducts = 'catalogModel:setAll',
     CatalogSetSelectedProduct = 'catalogModel:setSelected',
     CardCatalogClick = 'cardCatalog:click',
+    CardPreviewPurchase = 'cardPreview:purchase',
+    CardPreviewDelete = 'cardPreview:delete',
+    CardBasketDelete = 'cardBasket:delete',
+    BasketOrderButtonClick = 'basket:orderButtonClick',
+    OrderFormValidated = 'orderForm:validated',
+    OrderFormSubmit = 'orderForm:submit',
+    ContactsFormValidated = 'contactsForm:validated',
+    ContactsFormSubmit = 'contactsForm:submit',
+    SuccessSubmit = 'success:submit',
 } 
 
 type EventName = string | RegExp | EventEnum;

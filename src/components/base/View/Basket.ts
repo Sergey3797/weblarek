@@ -1,23 +1,16 @@
+import { IBasket } from "../../../types";
 import { ensureElement } from "../../../utils/utils";
 import { Component } from "../Component";
+import { EventEnum, IEvents } from "../Events";
 
-interface IBasketActions {
-  orderButtonClickHandler?: () => void;
-}
-
-interface IBasket {
-  items: HTMLElement[];
-  totalPrice: number;
-  title?: string;
-}
-
+// класс представления корзины
 export class Basket extends Component<IBasket> {
   protected titleElement: HTMLHeadingElement;
   protected totalPriceElement: HTMLSpanElement;
   protected listElement: HTMLUListElement;
   protected orderButtonElement: HTMLButtonElement;
 
-  constructor(container: HTMLElement, actions?: IBasketActions) {
+  constructor(protected events: IEvents, container: HTMLElement) {
     super(container);
     this.titleElement = ensureElement<HTMLHeadingElement>('.modal__title', this.container);
     this.totalPriceElement = ensureElement<HTMLSpanElement>('.basket__price', this.container);
@@ -26,10 +19,9 @@ export class Basket extends Component<IBasket> {
 
     this.titleElement.textContent = 'Корзина';
     this.orderButtonElement.textContent = 'Оформить';
-
-    if(actions?.orderButtonClickHandler) {
-      this.orderButtonElement.addEventListener('click', actions.orderButtonClickHandler);
-    }
+    this.orderButtonElement.addEventListener('click', () => {
+      this.events.emit(EventEnum.BasketOrderButtonClick);
+    });
   }
 
   set title(value: string) {
@@ -41,6 +33,7 @@ export class Basket extends Component<IBasket> {
   }
 
   set items(value: HTMLElement[]) {
+    this.listElement.innerHTML = '';
     if (value.length) {
       this.orderButtonElement.disabled = false;
       for (let child of value) {

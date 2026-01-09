@@ -23,7 +23,7 @@ export class Cart {
     this.events.emit(EventEnum.CartClear);
   }
   getTotalPrice(): number { // получение стоимости всех товаров в корзине
-    const totalPrice = this.products.reduce((prev, item) => item.price ?? 0 + prev, 0);
+    const totalPrice = this.products.reduce((prev, item) => (item.price ?? 0) + prev, 0);
     return totalPrice;
   }
   getProductsAmount(): number { //получение количества товаров в корзине

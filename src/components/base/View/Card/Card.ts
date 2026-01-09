@@ -1,25 +1,13 @@
-import { categoryMap } from "../../../../utils/constants";
+import { ICard} from "../../../../types";
 import { ensureElement } from "../../../../utils/utils";
 import { Component } from "../../Component";
 
-export type CategoryKey = keyof typeof categoryMap;
-
-export interface ICardActions {
-  onClick?: () => void;
-  purchaseButtonClickHandler?: () => void;
-  deleteButtonClickHandler?: () => void;
-}
-
-interface ICard {
-  title: string;
-  price: number | null;
-}
-
-export class Card<T = {}> extends Component<ICard & T> {
+// родительский класс для классов карточек товаров
+export class Card<T = {}> extends Component<ICard & T> { 
   protected titleElement: HTMLSpanElement | HTMLHeadingElement;
   protected priceElement: HTMLSpanElement;
 
-  constructor(container: HTMLElement) {
+  constructor(container: HTMLElement) { 
     super(container);
     
     this.titleElement = ensureElement<HTMLSpanElement | HTMLHeadingElement>('.card__title', this.container);
@@ -31,7 +19,7 @@ export class Card<T = {}> extends Component<ICard & T> {
   }
   set price(value: number | null) {
     if (value !== null) {
-      this.priceElement.textContent = String(value);
+      this.priceElement.textContent = String(value) + ' синапсов';
     }else {
       this.priceElement.textContent = 'Бесценно';
     }

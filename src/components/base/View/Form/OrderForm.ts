@@ -1,11 +1,8 @@
+import { IFormActions, IOrderForm, TPayment } from "../../../../types";
 import { ensureAllElements, ensureElement } from "../../../../utils/utils";
-import { Form, IFormActions } from "./Form";
+import { Form } from "./Form";
 
-interface IOrderForm {
-  payment: 'card' | 'cash' | '';
-  address: string;
-}
-
+// класс формы заказа
 export class OrderForm extends Form<IOrderForm> {
   protected paymentButtons: HTMLButtonElement[];
   protected addressInputElement: HTMLInputElement;
@@ -19,14 +16,16 @@ export class OrderForm extends Form<IOrderForm> {
     this.paymentButtons.forEach((button) => {
       button.addEventListener('click', () => {
         if (actions?.paymentButtonClickHandler) {
-          actions.paymentButtonClickHandler(button.name);
+          actions.paymentButtonClickHandler(button.name as TPayment);
         }     
       })
     })
 
-    if (actions?.addressInputChangeHandler) {
-      this.addressInputElement.addEventListener('change', actions.addressInputChangeHandler);
-    }
+    this.addressInputElement.addEventListener('change', () => {
+      if (actions?.addressInputChangeHandler) {
+        actions.addressInputChangeHandler(this.addressInputElement.value);
+      }  
+    });
   }
   
   set payment(value: 'card' | 'cash' | '') {

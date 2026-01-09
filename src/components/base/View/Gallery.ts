@@ -1,10 +1,8 @@
+import { IGallery } from "../../../types";
 import { Component } from "../Component";
 import { IEvents } from "../Events";
 
-interface IGallery {
-  catalog: HTMLElement[];
-}
-
+// класс представления каталога
 export class Gallery extends Component<IGallery> {
   protected catalogElement: HTMLElement;
 

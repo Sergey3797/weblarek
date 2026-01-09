@@ -1,15 +1,15 @@
-import { IProduct } from "../../../../types";
+import { CategoryKey, ICardActions, TCardPreview } from "../../../../types";
 import { categoryMap, CDN_URL } from "../../../../utils/constants";
 import { ensureElement } from "../../../../utils/utils";
-import { Card, CategoryKey, ICardActions } from "./Card";
+import { Card } from "./Card";
 
-export type TCardPreview = Pick<IProduct, 'image' | 'category' | 'description'>; 
-
+// класс карточки товара с подробностями 
 export class CardPreview extends Card<TCardPreview> {
   protected imageElement: HTMLImageElement;
   protected categoryElement: HTMLElement;
   protected descriptionElement: HTMLParagraphElement;
   protected purchaseButton: HTMLButtonElement;
+  private isPriceless: boolean;
 
   constructor(container: HTMLElement, actions?: ICardActions) {
     super(container);
@@ -17,6 +17,7 @@ export class CardPreview extends Card<TCardPreview> {
     this.imageElement = ensureElement<HTMLImageElement>('.card__image', this.container);
     this.descriptionElement = ensureElement<HTMLParagraphElement>('.card__text', this.container);
     this.purchaseButton = ensureElement<HTMLButtonElement>('.card__button', this.container);
+    this.isPriceless = false;
 
     if(actions?.purchaseButtonClickHandler) {
       this.purchaseButton.addEventListener('click', actions.purchaseButtonClickHandler);
@@ -39,13 +40,24 @@ export class CardPreview extends Card<TCardPreview> {
     this.descriptionElement.textContent = value;
   }
 
+  set isInCart(value: boolean) {
+    if (!this.isPriceless) {
+      if (value) {
+        this.purchaseButton.textContent = 'Удалить из корзины';
+      }else {
+        this.purchaseButton.textContent = 'Купить';
+      }
+    }
+  }
+
   override set price(value: number | null) {
     if (value) {
+      this.isPriceless = false;
       this.purchaseButton.disabled = false;
-      this.purchaseButton.textContent = 'Купить';
     }else {
-      this.purchaseButton.disabled = true;
+      this.isPriceless = true;
       this.purchaseButton.textContent = 'Недоступно';
+      this.purchaseButton.disabled = true;
     }
     super.price = value;
   }

@@ -1,11 +1,8 @@
+import { IContactsForm, IFormActions } from "../../../../types";
 import { ensureElement } from "../../../../utils/utils";
-import { Form, IFormActions } from "./Form";
+import { Form } from "./Form";
 
-interface IContactsForm {
-  email: string;
-  phone: string;
-}
-
+// класс формы контакта 
 export class ContactsForm extends Form<IContactsForm> {
   protected emailInputElement: HTMLInputElement;
   protected phoneInputElement: HTMLInputElement;
@@ -16,12 +13,17 @@ export class ContactsForm extends Form<IContactsForm> {
     this.emailInputElement = ensureElement<HTMLInputElement>('[name="email"]', this.container);
     this.phoneInputElement = ensureElement<HTMLInputElement>('[name="phone"]', this.container);
 
-    if (actions?.emailInputChangeHandler) {
-      this.emailInputElement.addEventListener('change', actions.emailInputChangeHandler);
-    }
-    if (actions?.phoneInputChangeHandler) {
-      this.phoneInputElement.addEventListener('change', actions.phoneInputChangeHandler);
-    }
+    
+    this.emailInputElement.addEventListener('change', () => {
+      if (actions?.emailInputChangeHandler) {
+        actions.emailInputChangeHandler(this.emailInputElement.value);
+      }
+    });
+    this.phoneInputElement.addEventListener('change', () => {
+      if (actions?.phoneInputChangeHandler) {
+        actions.phoneInputChangeHandler(this.phoneInputElement.value);
+      }
+    });
   }
 
   set email(value: string) {
